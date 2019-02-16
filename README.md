@@ -9,3 +9,8 @@ Heirarchy of project:
   1. Show drivers what they do correct/incorrect
 2. END GOAL: Directions/recommendations to drivers
 3. Visualize data of track
+
+# Using virtualenv
+Activate the virtualenv with source "./venv/Scripts/activate"
+
+Deactivate with "deactivate"
