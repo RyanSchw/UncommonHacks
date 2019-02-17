@@ -1,4 +1,5 @@
 import random
+import math
 
 class Vec2d:
     def __init__(self, x, y):
@@ -7,6 +8,9 @@ class Vec2d:
         
     def __repr__(self):
         return '({0}, {1})'.format(self.x, self.y)
+
+    def mag(self):
+        return math.sqrt(self.x**2 + self.y**2)
 
     @classmethod
     def rand(self):
