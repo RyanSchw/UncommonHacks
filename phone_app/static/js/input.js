@@ -119,16 +119,16 @@ class CheckPoint {
     }
 
     to_json(){
-        return {"x1": this.x1, "y1": this.y1, "x2": this.x2, "y2": this.y2};
+        return {"x1": this.x1/windowWidth, "y1": this.y1/windowHeight, "x2": this.x2/windowWidth, "y2": this.y2/windowHeight};
     }
 
     draw(){
         push();
         strokeWeight(3);
         if(!this.placed){
-            line(windowWidth * this.x1, windowHeight * this.y1, mouseX, mouseY);
+            line(this.x1, this.y1, mouseX, mouseY);
         } else {
-            line(windowWidth * this.x1, windowHeight * this.y1, windowWidth * this.x2, windowHeight * this.y2);
+            line(this.x1, this.y1, this.x2, this.y2);
         }
         pop();
     }
