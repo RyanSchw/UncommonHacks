@@ -52,8 +52,8 @@ def test_connect():
 
 @socketio.on('get_checkpoints', namespace='/sock')
 def get_checkpoints(message):
-    print(message)
-    itr = Checkpoint.deserialize_array(message.data)
+    print(message['data'])
+    itr = Checkpoint.deserialize_array(message['data'])
     checkpoints = []
     for i, indv in enumerate(itr):
         p.path

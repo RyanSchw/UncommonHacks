@@ -65,12 +65,12 @@ function checkpoints_to_json(){
 		conv.checkpoints.push(cp.to_json());
     });
     
-    return json;
+    return conv;
 }
 
-function send_checkpoints(json){
+function send_checkpoints(data){
     socket.emit('get_checkpoints', {
-        data: json.stringify()
+        data: JSON.stringify(data)
     });
 }
 
