@@ -20,6 +20,9 @@ class Sample:
             self.acc.__repr__(), \
             self.time)
 
+    def __iter__(self):
+        yield '10'
+
     @classmethod
     def rand(self):
         return Sample(Vec2d.rand(), Vec2d.rand(), Vec2d.rand(), random.random())

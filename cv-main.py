@@ -1,9 +1,10 @@
 import numpy as np
 import cv2
 import time
+import pickle
 
-import Vec2d
-import Sample
+from Vec2d import Vec2d
+from Sample import Sample
 from vis import SampleVisualizer
 
 
@@ -67,7 +68,7 @@ class VideoProcess():
         last_time = -1
         last_pos = Vec2d(-1, -1)
 
-        max_frames = 1000
+        max_frames = 180
         frame_index = 0
         while(video.isOpened() and frame_index < max_frames):
             frame_index += 1
@@ -93,7 +94,7 @@ class VideoProcess():
                 last_pos = cur_pos
                 
             else:
-                print("Processing complete " + str(len(path)))
+                print("Processing complete " + str(len(self.path)))
                 # print(path)
                 break
 
@@ -103,6 +104,18 @@ class VideoProcess():
             cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    p = VideoProcess(video_path="./resources/car_test_1.mp4", debug=True)
+    p = VideoProcess(debug=False)
     p.process_video()
+
+    save_path = "./resources/test_dot_1.pickle"
+
+    # Example save pickle
+    with open( save_path, "wb" ) as save_file:
+        pickle.dump(p.path, save_file)
+
+    # Example load pickled data
+    with open(save_path , "rb" ) as save_file:
+        data = pickle.load(save_file)
+        print(data[1])
+
     p.view_path()

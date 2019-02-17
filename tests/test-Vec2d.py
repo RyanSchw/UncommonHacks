@@ -1,5 +1,5 @@
 import unittest
-from utils import Vec2d
+import Vec2d
 
 class TestVec2d(unittest.TestCase):
 
