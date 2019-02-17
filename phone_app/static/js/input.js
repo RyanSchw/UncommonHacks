@@ -119,7 +119,7 @@ class CheckPoint {
     }
 
     to_json(){
-        return {"x1": this.x1/windowWidth, "y1": this.y1/windowHeight, "x2": this.x2/windowWidth, "y2": this.y2/windowHeight};
+        return {"x1": this.x1/LINE_POS_X, "y1": this.y1/windowHeight, "x2": this.x2/LINE_POS_X, "y2": this.y2/windowHeight};
     }
 
     draw(){
