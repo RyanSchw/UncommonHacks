@@ -16,12 +16,7 @@ class SampleVisualizer:
         y = [v.pos.y for v in self.samples]
         col = cm.rainbow([v.vel.mag() for v in self.samples])
         
-<<<<<<< HEAD
         plt.scatter(x, y, c=col, s=50)
-=======
-        plt.plot(x, y, 'ro')
-        plt.show()
->>>>>>> d06f6c0e1922ab4cdc6e06e8ab9ef85562fd2acf
 
     def gen_rand_samples(self, rand_sample_len):
         samp = []
