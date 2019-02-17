@@ -26,6 +26,14 @@ Time: {time}
     time=self.time
     )
 
+    def entry_velocity(self):
+        assert self.samples, 'Samples array is empty'
+        return self.samples[0].vel
+
+    def exit_velocity(self):
+        assert self.samples, 'Samples array is empty'
+        return self.samples[-1].vel
+
     def parse_from_server(self, json):
         pass
 

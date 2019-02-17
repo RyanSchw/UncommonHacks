@@ -1,6 +1,7 @@
 import unittest
 from Lap import Checkpoint, Run
-from utils import Vec2d, Sample
+from Vec2d import Vec2d
+from Sample import Sample
 
 class TestCheckpoint(unittest.TestCase):
     def test_intersection(self):
