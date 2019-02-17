@@ -22,8 +22,8 @@ function setup() {
 	socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
 
 	socket.on('data_vis', function (msg) {
-		console.log(msg.data);     
-		console.log("HELLOOO\n\n\n\n\n")   
+		data = JSON.parse(msg.data);
+		console.log(data)   
 	});
 	
 	samples = get_samples();

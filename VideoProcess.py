@@ -164,8 +164,13 @@ class VideoProcess():
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     p = VideoProcess(
         video_path="./resources/car_test_2_motion.webm", debug=False)
     p.process_video()
 
-    p.view_path()
+    # p.view_path()
+
+    print(Sample.serialize_array(p.path))
+
+    print(time.time() - start_time)
