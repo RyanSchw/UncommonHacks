@@ -9,7 +9,7 @@ class Button {
 
         this.pressed = false;
 
-        this.button_col = color(237, 149, 229);
+        this.button_col = color(40, 40, 40);
     }
 
     draw(){
@@ -26,10 +26,9 @@ class Button {
 
         //console.log([this.x, this.y, this.x+this.w, this.y+this.h]);
 
-        // if (this.pressed){fill(BUTTON_COL);} 
-        // else {fill('black');}
+        if (this.pressed){fill('white');} 
+        else {fill('black');}
 
-        fill('black');
         textAlign(CENTER, CENTER);
         noStroke();
         textSize(BUTTON_HEIGHT * 0.6);
@@ -119,7 +118,7 @@ class CheckPoint {
     }
 
     to_json(){
-        return {"x1": this.x1/windowWidth, "y1": this.y1/windowHeight, "x2": this.x2/windowWidth, "y2": this.y2/windowHeight};
+        return {"x1": this.x1/LINE_POS_X, "y1": this.y1/windowHeight, "x2": this.x2/LINE_POS_X, "y2": this.y2/windowHeight};
     }
 
     draw(){

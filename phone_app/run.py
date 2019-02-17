@@ -15,7 +15,6 @@ socketio = SocketIO(app)
 #p = VideoProcess(video_path="../phone_app/uploads/video.webm", debug=False)
 p = VideoProcess(video_path="../resources/car_test_2_motion.webm", debug=False)
 
-
 @app.route('/', methods=['GET'])
 def ui():
     return app.send_static_file('ui.html')

@@ -2,10 +2,10 @@
 var x, y;
 var cp_toggle_button;
 var record_button;
-var toggle_button;
 var checkpoints = [];
 var socket;
 var samples = [];
+var stats;
 
 // Constants
 var DISPLAY_SIZE;
@@ -54,7 +54,6 @@ function mousePressed(){
 
 	cp_toggle_button.mouseClicked();
 	record_button.mouseClicked();
-	toggle_button.mouseClicked();
 }
 
 function keyPressed(){
@@ -91,10 +90,10 @@ function setup_dash(){
 	cp_toggle_button = new Button("Select Check Points", 
 		LINE_POS_X + PADDING_PIX, PADDING_PIX, BUTTON_WIDTH, BUTTON_HEIGHT, cp_button_onclick);
 	record_button = new Button("Record", 
-		LINE_POS_X + PADDING_PIX, PADDING_PIX + 2*BUTTON_HEIGHT, BUTTON_WIDTH / 2, BUTTON_HEIGHT, record_button_onclick);
-	toggle_button = new Button("Toggle", 
-		LINE_POS_X + PADDING_PIX + BUTTON_WIDTH/2, PADDING_PIX + 2*BUTTON_HEIGHT, 
-		BUTTON_WIDTH / 2, BUTTON_HEIGHT, toggle_button_onclick);
+		LINE_POS_X + PADDING_PIX, PADDING_PIX + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, record_button_onclick);
+
+	stats = new Stats(LINE_POS_X + PADDING_PIX, 4*PADDING_PIX + 2*BUTTON_HEIGHT,
+		BUTTON_WIDTH, windowHeight - (PADDING_PIX + 2*BUTTON_HEIGHT));
 }
 
 function draw_dash(){
@@ -103,7 +102,7 @@ function draw_dash(){
 	line(LINE_POS_X, 0, LINE_POS_X, DISPLAY_SIZE);
 	cp_toggle_button.draw();
 	record_button.draw();
-	toggle_button.draw();
+	stats.draw();
 
 	//cp_toggle_button.draw();
 	pop();
