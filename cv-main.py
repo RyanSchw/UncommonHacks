@@ -1,7 +1,9 @@
 import numpy as np
 import cv2
 import time
-from utils import Vec2d, Sample
+
+import Vec2d
+import Sample
 from vis import SampleVisualizer
 
 
