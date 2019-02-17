@@ -35,7 +35,7 @@ def find_ball_location(mask):
 
 path = []
 last_frame_timestamp = -1
-last_position = Vec2d(-1, -1)
+last_pos = Vec2d(-1, -1)
 while(video.isOpened()):
 
     # Measure frame reading speeds
@@ -50,10 +50,10 @@ while(video.isOpened()):
         frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)    # Downsize frame
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)        # Convert RGB to HSV
         mask = cv2.inRange(hsv, lower_red, upper_red)       # Mask out non-red pixels
-        location = find_ball_location(mask)                 # Find location of pixels
+        cur_pos = find_ball_location(mask)                 # Find location of pixels
 
         sample = Sample(location, Vec2d(0,0), Vec2d(0,0), Vec2d(0,0))
-        sample.pos = location
+        sample.pos = cur_pos
         # Form path of locations
         path.append(sample)
 
@@ -62,11 +62,13 @@ while(video.isOpened()):
         if last_frame_timestamp > 0:
             
             delta_time = (frame_timestamp - last_frame_timestamp) / 1000
-            delta_pos = location.dist(last_position)
+            delta_pos = cur_pos - last_pos
 
-            print(delta_pos)
+            velocity_mag = delta_pos / delta_time
 
-        last_position = location
+            print(delta_pos / delta_time)
+
+        last_pos = cur_pos
         last_frame_timestamp = frame_timestamp
 
 

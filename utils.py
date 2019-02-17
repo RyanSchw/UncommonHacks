@@ -13,10 +13,23 @@ class Vec2d:
     def rand(self):
         return Vec2d(random.random(), random.random())
 
-    @classmethod
     def dist(self, other):
-        self.x
-        return math.sqrt(pow(self.x - other.x, 2) + pow(self.y - other.y))
+        return (self - other).mag()
+
+    def mag(self):
+        return math.sqrt(pow(self.x, 2) + pow(self.y, 2))
+
+    def unit(self):
+        mag = self.mag()
+        return Vec2d(self.x / mag,  self.y/ mag)
+
+    def __add__(self, other):
+        return Vec2d(self.x + other.x, self.y + other.y)
+    def __sub__(self, other):
+        return Vec2d(self.x - other.x, self.y - other.y)
+
+
+
 
 SAMPLE_ATTRIBUTES = ('pos', 'vel', 'acc', 'time')
 
