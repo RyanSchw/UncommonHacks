@@ -1,6 +1,8 @@
 import utils
 import random
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
 
 class SampleVisualizer:
     def __init__(self, samples=[], rand_sample_len=None):
@@ -9,32 +11,29 @@ class SampleVisualizer:
         if rand_sample_len is not None:
             self.samples = self.gen_rand_samples(rand_sample_len)
 
-    def plot_meas(self, meas):
-        assert meas in utils.SAMPLE_ATTRIBUTES, "Measurement doesn't exist"
-        assert type(getattr(self.samples[0], meas)) == utils.Vec2d, "Must use Vec2d type measurement"
-
-        x = [getattr(v, meas).x for v in self.samples]
-        y = [getattr(v, meas).y for v in self.samples]
+    def plot_track(self):
+        x = [v.pos.x for v in self.samples]
+        y = [v.pos.y for v in self.samples]
+        col = cm.rainbow([v.vel.mag() for v in self.samples])
         
-        plt.plot(x, y, 'ro')
-        plt.show()
+        plt.scatter(x, y, c=col, s=50)
 
     def gen_rand_samples(self, rand_sample_len):
         samp = []
         for i in range(rand_sample_len):
-            x_rand = random.random()
-            y_rand = random.random()
 
-            s = utils.Vec2d(x_rand, y_rand)
+            p = utils.Vec2d.rand()
+            v = utils.Vec2d.rand()
+            a = utils.Vec2d.rand()
 
-            samp.append(utils.Sample(s, s, s, 10))
+            samp.append(utils.Sample(p, v, a, 10))
 
         return samp
         
 if __name__ == '__main__':
     v = SampleVisualizer(rand_sample_len=400)
 
-    v.plot_meas('pos')
+    v.plot_track()
     plt.show()
 
 
