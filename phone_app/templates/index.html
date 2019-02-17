@@ -75,11 +75,7 @@
 			toggle.classList.toggle("invis")
 			if (navigator.mediaDevices.getUserMedia) {
 				navigator.mediaDevices.getUserMedia({
-						video: {
-							facingMode: {
-								exact: 'environment'
-							}
-						}
+						video: true
 					})
 					.then(function (stream) {
 						// video.srcObject = stream;

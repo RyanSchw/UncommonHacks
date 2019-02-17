@@ -1,14 +1,21 @@
-from flask import Flask,  request, render_template
+from flask import Flask, request, render_template
 from flask_socketio import SocketIO, emit
 
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 socketio = SocketIO(app)
 
-
 @app.route('/', methods=['GET'])
+def ui():
+    return app.send_static_file('ui.html')
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return app.send_static_file('js/' + path)
+
+@app.route('/record', methods=['GET'])
 def index():
     return render_template("index.html")
 
@@ -24,6 +31,8 @@ def save_record():
 def test_message(message):
     print(message)
     emit('record', {'data': message}, broadcast=True)
+
+
 
 @socketio.on('connect', namespace='/sock')
 def test_connect():
