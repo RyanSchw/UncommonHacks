@@ -21,12 +21,27 @@ class Vec2d:
 
     def unit(self):
         mag = self.mag()
+        if mag == 0:
+            return Vec2d(0,0)
         return Vec2d(self.x / mag,  self.y/ mag)
 
     def __add__(self, other):
         return Vec2d(self.x + other.x, self.y + other.y)
     def __sub__(self, other):
         return Vec2d(self.x - other.x, self.y - other.y)
+    def __mul__(self, scalar):
+        return Vec2d(self.x * scalar, self.y * scalar)
+    def __truediv__(self, scalar):
+        assert scalar != 0
+        return Vec2d(self.x / scalar, self.y / scalar)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.x == other.x and self.y == other.y
+        else:
+            return False
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 
 

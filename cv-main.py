@@ -52,24 +52,24 @@ while(video.isOpened()):
         mask = cv2.inRange(hsv, lower_red, upper_red)       # Mask out non-red pixels
         cur_pos = find_ball_location(mask)                 # Find location of pixels
 
-        sample = Sample(location, Vec2d(0,0), Vec2d(0,0), Vec2d(0,0))
-        sample.pos = cur_pos
-        # Form path of locations
-        path.append(sample)
-
         # Calculate frame velocity
         frame_timestamp = video.get(cv2.CAP_PROP_POS_MSEC)
-        if last_frame_timestamp > 0:
+        cur_vel = Vec2d(0,0)
+        delta_time = (frame_timestamp - last_frame_timestamp) / 1000
+        if last_frame_timestamp > 0 and delta_time > 0:
             
-            delta_time = (frame_timestamp - last_frame_timestamp) / 1000
-            delta_pos = cur_pos - last_pos
-
-            velocity_mag = delta_pos / delta_time
-
-            print(delta_pos / delta_time)
+            # Calculate displacment
+            displacment = cur_pos - last_pos
+            # Calculate velocity
+            cur_vel = displacment / delta_time
+            print(cur_vel)
 
         last_pos = cur_pos
         last_frame_timestamp = frame_timestamp
+
+
+        sample = Sample(cur_pos, cur_vel, Vec2d(0,0), frame_timestamp)
+        path.append(sample)
 
 
 
