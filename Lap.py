@@ -93,9 +93,14 @@ Time: {time}
 
 class Run:
     def __init__(self, path, checkpoints):
+
+
         self.path = path
         self.checkpoints = checkpoints
         self.populate_checkpoint_samples()
+
+        print("you won! no bugs " + str(checkpoints))
+
 
     def __repr__(self):
         return '''
@@ -113,6 +118,9 @@ Checkpoints: {checkpoints}
 
         for (sample, nextsample) in zip(self.path, self.path[1::]):
             search_checkpoint = self.checkpoints[search % len(self.checkpoints)]
+
+
+
             if (search_checkpoint.crossedCheckpoint(sample, nextsample)
                 and not search_checkpoint.contains(sample)):
                 # Line was crossed
@@ -128,14 +136,25 @@ Checkpoints: {checkpoints}
         self.compile_lap_times()
 
     def summary(self):
-        return '''Cool cat facts about your current run
-
-'''
+        s =  '''Cool cat facts about your current run:
+Total lap time was: {total_lap_time}
+'''.format(total_lap_time=self.checkpoints[-1].samples[-1].time)
+        for i, time in enumerate(self.calculate_time()):
+            s = s + 'Time for lap {lap}: {time}'.format(lap=i, time=time)
+        return s
 
     def compile_lap_times(self):
         for checkpoint in self.checkpoints:
             # Calculate the time of the "Checkpoint Samples"
+            assert checkpoint.samples, 'Samples array is empty'
             checkpoint.time = checkpoint.samples[-1].time - checkpoint.samples[0].time
+
+    def calculate_time(self):
+        breakdown = []
+        for checkpoint in self.checkpoints:
+            breakdown.append(checkpoint.samples[-1].time)
+        return breakdown
+
 
 def calculate_theoretical_lap(runs):
     fastest_checkpoints = []

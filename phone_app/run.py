@@ -15,6 +15,8 @@ socketio = SocketIO(app)
 #p = VideoProcess(video_path="../phone_app/uploads/video.webm", debug=False)
 p = VideoProcess(video_path="../resources/car_test_2_motion.webm", debug=False)
 
+parsed_path = []
+
 
 @app.route('/', methods=['GET'])
 def ui():
@@ -33,9 +35,10 @@ def save_record():
     print(request.files['file'].filename) 
     file = request.files['file']
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+    global parsed_path
 
-    path = p.process_video()
-    out = Sample.serialize_array(path)
+    parsed_path = p.process_video()
+    out = Sample.serialize_array(parsed_path)
     with app.app_context():
         socketio.emit('data_vis', {'data': out}, broadcast=True, namespace='/sock')
 
@@ -55,15 +58,15 @@ def get_checkpoints(message):
     print(message['data'])
     itr = Checkpoint.deserialize_array(message['data'])
     checkpoints = []
+    global parsed_path
     for i, indv in enumerate(itr):
-        p.path
         node1, node2 = Checkpoint.deserialize(indv)
         checkpoint = Checkpoint(i, node1, node2)
         checkpoints.append(checkpoint)
-    run = Run(p.path, checkpoints).summary()
+    run = Run(parsed_path, checkpoints).summary()
     print(run)
 
-    emit('summary', {'data':run})
+    emit('summary', {'data':run}, broadcast=True)
 
 if __name__ == "__main__":
     app.run(ssl_context=('cert.pem', 'key.pem'), host ="0.0.0.0")
