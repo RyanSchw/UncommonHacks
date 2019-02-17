@@ -27,6 +27,10 @@ function setup() {
 		samples = parse_samples(msg.data);
 	});
 
+	socket.on('summary', function (msg) {
+		console.log(msg)
+	});
+
 	draw_setup();
 }
 
