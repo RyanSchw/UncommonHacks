@@ -54,11 +54,6 @@
 		var toggle = document.getElementById("toggle");
 
 		var socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
-
-		socket.on('hello', function (msg) {
-
-		});
-
 		record.onclick = function () {
 			if (record.className == "inactive") {
 				socket.emit('req-rec', {
