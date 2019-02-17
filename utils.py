@@ -46,6 +46,9 @@ class Vec2d:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __gt__(self, other):
+        return self.mag() > other.mag() and self != other
+    
 
 
 
