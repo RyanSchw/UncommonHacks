@@ -4,6 +4,7 @@ var cp_toggle_button;
 var record_button;
 var toggle_button;
 var checkpoints = [];
+var socket;
 
 // Constants
 var DISPLAY_SIZE;
@@ -18,6 +19,8 @@ function setup() {
 	// put setup code here
 	createCanvas(windowWidth, windowHeight);
 
+	socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
+	receive_samples();
 	samples = get_samples();
 
 	draw_setup();

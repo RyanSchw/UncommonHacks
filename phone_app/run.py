@@ -26,13 +26,10 @@ def save_record():
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
     return '200'
 
-
 @socketio.on('req-rec', namespace='/sock')
 def test_message(message):
     print(message)
     emit('record', {'data': message}, broadcast=True)
-
-
 
 @socketio.on('connect', namespace='/sock')
 def test_connect():

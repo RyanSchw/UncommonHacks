@@ -58,21 +58,28 @@ var cp_button_onclick = function(){
 
 var record_button_onclick = function(){
     console.log('Record pressed');
-    var socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
 	if(!record_button.pressed){
         // Button turned on
         record_button.pressed = true;
 
-        socket.emit('req-rec', {
-            record: true
-        });
+        req_rec(true);
     } else {
         // Button turned off
         record_button.pressed = false;
-        socket.emit('req-rec', {
-            record: false
-        })
+        req_rec(false);
     }
+}
+
+function req_rec(on){
+    socket.emit('req-rec', {
+        record: on
+    });
+}
+
+function receive_samples(){
+    socket.on('data_vis', function (msg) {
+        console.log(msg.data);        
+    });
 }
 
 var toggle_button_onclick = function(){
