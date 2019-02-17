@@ -1,7 +1,10 @@
 import numpy as np
 import cv2
 import time
-from utils import Vec2d, Sample
+import pickle
+
+from Vec2d import Vec2d
+from Sample import Sample
 from vis import SampleVisualizer
 
 
@@ -10,6 +13,7 @@ class VideoProcess():
     def __init__(self, video_path="./resources/red_dot_1_down.avi", debug=False):
         self.debug = debug
         self.video_path = video_path
+        self.scale_factor = 0.25
 
         self.low_mask = np.array([0,140,40]) # Mask for color detection
         self.up_mask = np.array([255,255,240])
@@ -33,7 +37,7 @@ class VideoProcess():
 
     def view_path(self):
         vizer = SampleVisualizer(self.path)
-        vizer.plot_track(max_vel=250)
+        vizer.plot_track(max_vel=self.max_vel)
 
     def process_frame(self, frame):
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)        # Convert RGB to HSV
@@ -47,7 +51,7 @@ class VideoProcess():
 
     def calculate_velocity(self, current_time, last_time, current_pos, last_pos):
         cur_vel = Vec2d(0,0)
-        delta_time = (current_time - last_time) / 1000   # Calculate dT in seconds
+        delta_time = (current_time - last_time) # Calculate dT in seconds
 
         if last_time > 0 and delta_time > 0:
             # Calculate displacment
@@ -61,11 +65,18 @@ class VideoProcess():
 
     def process_video(self):
         video = cv2.VideoCapture(self.video_path)
+
+        width = video.get(cv2.CAP_PROP_FRAME_WIDTH) * self.scale_factor
+        height = video.get(cv2.CAP_PROP_FRAME_HEIGHT) * self.scale_factor
+
+        scale_vector = Vec2d(width, height)
+
+        print(width, height)
         
         last_time = -1
         last_pos = Vec2d(-1, -1)
 
-        max_frames = 1000
+        max_frames = 180
         frame_index = 0
         while(video.isOpened() and frame_index < max_frames):
             frame_index += 1
@@ -74,14 +85,18 @@ class VideoProcess():
             # Process frame if it is available
             if(ret):
                 # Process frame to grab locations
-                frame = cv2.resize(frame, (0,0), fx=0.25, fy=0.25)    # Downsize frame
+                frame = cv2.resize(frame, (0,0), fx=self.scale_factor, fy=self.scale_factor)    # Downsize frame
+
                 cur_pos = self.process_frame(frame)
 
                 if cur_pos == -1:
                     break
+
+                # Scale down vector to a 0.0 -> 1.0 scale
+                cur_pos = cur_pos.elm_div(scale_vector)
                 
                 # Calculate frame velocity
-                cur_time = video.get(cv2.CAP_PROP_POS_MSEC)
+                cur_time = video.get(cv2.CAP_PROP_POS_MSEC) / 1000.0
                 cur_vel = self.calculate_velocity(cur_time, last_time, cur_pos, last_pos)
 
                 sample = Sample(cur_pos, cur_vel, Vec2d(0,0), cur_time)
@@ -91,7 +106,7 @@ class VideoProcess():
                 last_pos = cur_pos
                 
             else:
-                print("Processing complete " + str(len(path)))
+                print("Processing complete " + str(len(self.path)))
                 # print(path)
                 break
 
@@ -101,6 +116,18 @@ class VideoProcess():
             cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    p = VideoProcess(video_path="./resources/car_test_1.mp4", debug=True)
+    p = VideoProcess(video_path="./resources/car_test_1.mp4",debug=True)
     p.process_video()
+
+    save_path = "./resources/test_dot_1.pickle"
+
+    # Example save pickle
+    with open( save_path, "wb" ) as save_file:
+        pickle.dump(p.path, save_file)
+
+    # Example load pickled data
+    with open(save_path , "rb" ) as save_file:
+        data = pickle.load(save_file)
+        print(data[1])
+
     p.view_path()

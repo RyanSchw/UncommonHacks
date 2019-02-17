@@ -1,4 +1,5 @@
-import utils
+import Vec2d
+import Sample
 import random
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
