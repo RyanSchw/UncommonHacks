@@ -126,9 +126,9 @@ class CheckPoint {
         push();
         strokeWeight(3);
         if(!this.placed){
-            line(this.x1, this.y1, mouseX, mouseY);
+            line(windowWidth * this.x1, windowHeight * this.y1, mouseX, mouseY);
         } else {
-            line(this.x1, this.y1, this.x2, this.y2);
+            line(windowWidth * this.x1, windowHeight * this.y1, windowWidth * this.x2, windowHeight * this.y2);
         }
         pop();
     }
