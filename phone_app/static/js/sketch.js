@@ -36,8 +36,8 @@ function setup() {
 		sample_lists = msg['cps']
 		for(i in sample_lists) {
 			console.log()
+			runs.append(parse_samples(sample_lists[i]))
 		}
-		samples = parse_samples(sample_lists[0]);
 		
 	});
 
