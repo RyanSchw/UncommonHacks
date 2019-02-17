@@ -37,20 +37,41 @@ function draw_data(samples, rad){
     pop();
 }
 
-// function gen_rand_samples(n){
-//     var samples = [];
+function gen_rand_samples(n){
+    var samples = [];
 
-//     for (i = 0; i < n; i++){
-//         p = vec_abs(createVector(Math.random(), Math.random()));
-//         v = vec_abs(createVector(Math.random(), Math.random()));
-//         a = vec_abs(createVector(Math.random(), Math.random()));
-//         t = Math.random();
-//         samples.push(new Sample(p, v, a, t));
-//     }
+    for (i = 0; i < n; i++){
+        p = vec_abs(createVector(Math.random(), Math.random()));
+        v = vec_abs(createVector(Math.random(), Math.random()));
+        a = vec_abs(createVector(Math.random(), Math.random()));
+        t = Math.random();
+        samples.push(new Sample(p, v, a, t));
+    }
 
-//     return samples;
-// }
+    return samples;
+}
 
 function vec_abs(v){
     return createVector(Math.abs(v.x), Math.abs(v.y));
+}
+
+class Stats{
+    constructor(x, y, w, h){
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+
+    draw(){
+        var text_height = BUTTON_HEIGHT * 0.3;
+        fill('black');
+        textAlign(LEFT);
+        noStroke();
+        textSize(text_height);
+        text("Statistics:", this.x, this.y);
+        
+        if(samples[samples.length-1])
+            text("Lap time: " + samples[samples.length-1].time, this.x, this.y + text_height);
+    }
 }
