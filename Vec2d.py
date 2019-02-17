@@ -12,6 +12,12 @@ class Vec2d:
     def mag(self):
         return math.sqrt(self.x**2 + self.y**2)
 
+    def serialize(self, name):
+        return '''"{name}": {{
+            "x": {x},
+            "y": {y}
+    }}'''.format(name=name, x=self.x, y=self.y)
+
     @classmethod
     def rand(self):
         return Vec2d(random.random(), random.random())
