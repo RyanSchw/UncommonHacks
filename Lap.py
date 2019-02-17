@@ -125,3 +125,32 @@ Checkpoints: {checkpoints}
         for checkpoint in self.checkpoints:
             # Calculate the time of the "Checkpoint Samples"
             checkpoint.time = checkpoint.samples[-1].time - checkpoint.samples[0].time
+
+def calculate_theoretical_lap(runs):
+    fastest_checkpoints = []
+    for i, run in enumerate(runs):
+        for j, checkpoint in enumerate(run.checkpoints):
+            if i == 0:
+                fastest_checkpoints.append(checkpoint)
+            else:
+                if checkpoint.time < fastest_checkpoints[j].time:
+                    fastest_checkpoints[j] = checkpoint
+
+    path = []
+    for x in fastest_checkpoints:
+        path.extend(x.samples)
+
+    # Time correction
+    # Starting time of one checkpoint should be the ending time of the previous checkpoint (plus an average delta of 1/30)
+    time = 0
+    TIME_CONSTANT = 1.0 / 30
+    for checkpoint in fastest_checkpoints:
+        time_diff = checkpoint.samples[0].time - time
+        for sample in checkpoint.samples:
+            sample.time = sample.time - time_diff
+            if fastest_checkpoints.index(checkpoint) != 0:
+                sample.time = sample.time + TIME_CONSTANT
+        time = checkpoint.samples[-1].time
+
+
+    return Run(path, fastest_checkpoints)
