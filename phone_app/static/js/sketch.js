@@ -27,19 +27,19 @@ function setup() {
 	BUTTON_COL = color(40, 40, 40);
 
 	var received_data;
-	socket.on('data_vis', function (msg) {
-		samples = parse_samples(msg.data);
-	});
+    socket.on('data_vis', function (msg) {
+        runs.append(parse_samples(msg.data));
+    });
 
-	socket.on('summary', function (msg) {
-		console.log(msg['cps'])
-		sample_lists = msg['cps']
-		for(i in sample_lists) {
-			console.log()
-		}
-		samples = parse_samples(sample_lists[0]);
-		
-	});
+    socket.on('summary', function (msg) {
+        console.log(msg['cps'])
+        sample_lists = msg['cps']
+        for(i in sample_lists) {
+            console.log()
+            runs.append(parse_samples(sample_lists[i]))
+        }
+        
+    });
 
 	draw_setup();
 }
@@ -77,9 +77,11 @@ function keyPressed(){
 
 	if(keyCode == UP_ARROW){
 		cur_run = (cur_run + 1) % (runs.length + 1);
+		samples = runs[cur_run];
 	}
 	if(keyCode == DOWN_ARROW){
 		cur_run = (cur_run - 1) % (runs.length + 1);
+		samples = runs[cur_run];
 	}
 }
 

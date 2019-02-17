@@ -10,18 +10,20 @@ class Sample {
 }
 
 function parse_samples(data) {
-    parsed = JSON.parse(data).samples;
+    parsed = JSON.parse(data).runs;
 
-    var samples = [];
+    var runs = [];
     for(var i = 0; i < parsed.length; i++){
-        p = createVector(parsed[i].pos.x, parsed[i].pos.y);
-        v = createVector(parsed[i].vel.x, parsed[i].vel.y);
-        a = createVector(parsed[i].acc.x, parsed[i].acc.y);
-        t = parsed[i].time;
-        samples.push(new Sample(p, v, a, t));
+        for(var j = 0; j < parsed[i].length; j++){
+            p = createVector(parsed[i].pos.x, parsed[i].pos.y);
+            v = createVector(parsed[i].vel.x, parsed[i].vel.y);
+            a = createVector(parsed[i].acc.x, parsed[i].acc.y);
+            t = parsed[i].time;
+            samples.push(new Sample(p, v, a, t));
+        }
     }
 
-    return samples;
+    return runs;
 }
 
 function draw_data(samples, rad){
