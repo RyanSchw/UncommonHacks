@@ -28,7 +28,13 @@ function setup() {
 	});
 
 	socket.on('summary', function (msg) {
-		console.log(msg)
+		console.log(msg['cps'])
+		sample_lists = msg['cps']
+		for(i in sample_lists) {
+			console.log()
+		}
+		samples = parse_samples(sample_lists[0]);
+		
 	});
 
 	draw_setup();

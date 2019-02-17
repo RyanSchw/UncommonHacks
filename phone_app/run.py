@@ -63,9 +63,12 @@ def get_checkpoints(message):
         checkpoint = Checkpoint(i, node1, node2)
         checkpoints.append(checkpoint)
     run = Run(parsed_path, checkpoints).summary()
-    print(run)
+    
+    list_of_samples = []
+    for checkpoint in checkpoints:
+        list_of_samples.append(Sample.serialize_array(checkpoint.samples))
 
-    emit('summary', {'data':run}, broadcast=True)
+    emit('summary', {'data':run, 'cps': list_of_samples}, broadcast=True)
 
 if __name__ == "__main__":
     app.run(ssl_context=('cert.pem', 'key.pem'), host ="0.0.0.0")
