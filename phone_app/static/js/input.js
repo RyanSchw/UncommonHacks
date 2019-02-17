@@ -76,12 +76,6 @@ function req_rec(on){
     });
 }
 
-function receive_samples(){
-    socket.on('data_vis', function (msg) {
-        console.log(msg.data);        
-    });
-}
-
 var toggle_button_onclick = function(){
 	
 }

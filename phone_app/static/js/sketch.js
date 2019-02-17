@@ -20,7 +20,12 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 
 	socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
-	receive_samples();
+
+	socket.on('data_vis', function (msg) {
+		console.log(msg.data);     
+		console.log("HELLOOO\n\n\n\n\n")   
+	});
+	
 	samples = get_samples();
 
 	draw_setup();

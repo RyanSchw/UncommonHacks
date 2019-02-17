@@ -4,6 +4,7 @@ import sys
 sys.path.append("..")
 
 from VideoProcess import VideoProcess
+from Sample import Sample
 
 import os
 
@@ -32,9 +33,10 @@ def save_record():
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
 
     path = p.process_video()
-    
-    emit('data_vis', {'data': path})
-
+    out = Sample.serialize_array(path)
+    print("emitting " + out)
+    with app.app_context():
+        socketio.emit('data_vis', {'data': out}, broadcast=True, namespace='/sock')
 
     return '200'
 
