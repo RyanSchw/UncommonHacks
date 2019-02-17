@@ -8,11 +8,29 @@ class Checkpoint:
         self.number = number   # Integer
         self.node1 = node1     # Vec2d
         self.node2 = node2     # Vec2d
-        self.samples = samples # Array of Sample
+        self.samples = samples[:] # Array of Sample
         self.time = 0
+
+    def __repr__(self):
+        return '''
+Number: {number}
+Node1: {node1}
+Node2: {node2}
+Samples: {samples}
+Time: {time}
+'''.format(
+    number=self.number,
+    node1=self.node1,
+    node2=self.node2,
+    samples=self.samples,
+    time=self.time
+    )
 
     def parse_from_server(self, json):
         pass
+
+    def contains(self, sample):
+        return sample in self.samples
 
     def crossedCheckpoint(self, sample, nextsample):
         # See if lines intersect
@@ -31,24 +49,24 @@ class Checkpoint:
         if o1 != o2 and o3 != o4:
             return True
 
-        if o1 == 0 and Checkpoint.__on_segment(p1, p2, q1):
+        if o1 == 0 and self.__on_segment(p1, p2, q1):
             return True
-        if o2 == 0 and Checkpoint.__on_segment(p1, q2, q1):
+        if o2 == 0 and self.__on_segment(p1, q2, q1):
             return True
-        if o3 == 0 and Checkpoint.__on_segment(p2, p1, q2):
+        if o3 == 0 and self.__on_segment(p2, p1, q2):
             return True
-        if o4 == 0 and Checkpoint.__on_segment(p2, q1, q2):
+        if o4 == 0 and self.__on_segment(p2, q1, q2):
             return True
         
         return False
 
 
-    def __on_segment(p, q, r):
+    def __on_segment(self, p, q, r):
         if (q.x <= max(p.x, r.x) and q.x >= min(p.x, r.x) and q.y <= max(p.y, r.y) and q.y >= min(p.y, r.y)):
             return True
         return False
 
-    def __orientation(p, q, r):
+    def __orientation(self, p, q, r):
         val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y)
 
         if val == 0:
@@ -63,19 +81,32 @@ class Run:
     def __init__(self, path, checkpoints):
         self.path = path
         self.checkpoints = checkpoints
-        self.populate()
+        self.populate_checkpoint_samples()
+
+    def __repr__(self):
+        return '''
+Path: {path}
+
+Checkpoints: {checkpoints}
+        '''.format(path=self.path, checkpoints=self.checkpoints)
 
     # Checkpoints is the list of checkpoint lines
+    # This will get the first node after the checkpoint line is crossed
+    # and grab any addtl samples until the next checkpoint is hit
     def populate_checkpoint_samples(self):
-        start = 0
-        samples = []
+        i = -1
+        search = 0
+
         for (sample, nextsample) in zip(self.path, self.path[1::]):
-            currentCheckpoint = 0
-            # Check if point has crossed a checkpoint
-            # Checkpoints are in order, so only need to look for the first one
-            for checkpoint in self.checkpoints:
-                if (checkpoint.crossedCheckpoint(sample, nextsample)):
-                    print('Line was crossed!!')
-                    currentCheckpoint = checkpoint
-                currentCheckpoint.samples.push(sample)
-        return samples
+            search_checkpoint = self.checkpoints[search % len(self.checkpoints)]
+            if (search_checkpoint.crossedCheckpoint(sample, nextsample)
+                and not search_checkpoint.contains(sample)):
+                # Line was crossed
+                i = i + 1
+                search = search + 1
+                if (i >= len(self.checkpoints)):
+                    # Splice the samples that weren't used yet
+                    self.path = self.path[self.path.index(nextsample):]
+                    break
+            if i >= 0:
+                self.checkpoints[i].samples.append(nextsample)
