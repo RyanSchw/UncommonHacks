@@ -13,7 +13,7 @@ app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 socketio = SocketIO(app)
 #p = VideoProcess(video_path="../phone_app/uploads/video.webm", debug=False)
-p = VideoProcess(video_path="../resources/car_test_2_motion.webm", debug=False)
+p = VideoProcess(video_path="../resources/car_test_2_motion.webm", debug=True)
 
 parsed_path = []
 
@@ -55,7 +55,6 @@ def test_connect():
 
 @socketio.on('get_checkpoints', namespace='/sock')
 def get_checkpoints(message):
-    print(message['data'])
     itr = Checkpoint.deserialize_array(message['data'])
     checkpoints = []
     global parsed_path
@@ -64,9 +63,12 @@ def get_checkpoints(message):
         checkpoint = Checkpoint(i, node1, node2)
         checkpoints.append(checkpoint)
     run = Run(parsed_path, checkpoints).summary()
-    print(run)
+    
+    list_of_samples = []
+    for checkpoint in checkpoints:
+        list_of_samples.append(Sample.serialize_array(checkpoint.samples))
 
-    emit('summary', {'data':run}, broadcast=True)
+    emit('summary', {'data':run, 'cps': list_of_samples}, broadcast=True)
 
 if __name__ == "__main__":
     app.run(ssl_context=('cert.pem', 'key.pem'), host ="0.0.0.0")
