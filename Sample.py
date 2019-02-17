@@ -1,5 +1,6 @@
 import random
 import Vec2d
+import json
 
 ## SAMPLE CLASS
 # Contains data for an timestamped position, velocity, and acceleration.
@@ -27,3 +28,26 @@ class Sample:
     @classmethod
     def rand(self):
         return Sample(Vec2d.rand(), Vec2d.rand(), Vec2d.rand(), random.random())
+
+    def serialize(self):
+        return '''{{
+    {pos},
+    {vel},
+    {acc},
+    "time": {time}
+}}'''.format(
+    pos=self.pos.serialize('pos'),
+    vel=self.vel.serialize('vel'),
+    acc=self.acc.serialize('acc'),
+    time=self.time
+)
+    def serialize_array(arr):
+        obj = '''{
+            "samples": ['''
+
+        for serial in arr:
+            obj = obj + serial.serialize()
+            if arr.index(serial) != len(arr) - 1:
+                obj = obj + ', \n'
+
+        return obj + ']}'
