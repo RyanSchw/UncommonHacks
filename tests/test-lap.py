@@ -1,4 +1,5 @@
 import unittest
+import mock
 from Lap import Checkpoint, Run
 from Vec2d import Vec2d
 from Sample import Sample
@@ -115,10 +116,31 @@ class TestRun(unittest.TestCase):
             )
         ]
         lap = Run(path, checkpoints)
-        print(lap)
+
+        self.assertEqual(lap.checkpoints[0].samples[0].pos, Vec2d(1, 1))
+
+    @mock.patch('Lap.Run.populate_checkpoint_samples')
+    def test_lap_times(self, mocked):
+        mocked.return_value = 1
+        lap = Run(None, [Checkpoint(None, None, None, [
+            Sample(
+                None, None, None,
+                2
+            ),
+            Sample(
+                None, None, None,
+                5
+            )
+        ])])
+
+        lap.compile_lap_times()
+        res = lap.checkpoints[0].time
+
+        self.assertEqual(res, 3)
+
 
 # Display all the tests passing
-# suite = unittest.TestLoader().loadTestsFromTestCase(TestCheckpoint)
-# unittest.TextTestRunner(verbosity=2).run(suite)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestCheckpoint)
+unittest.TextTestRunner(verbosity=2).run(suite)
 suite = unittest.TestLoader().loadTestsFromTestCase(TestRun)
 unittest.TextTestRunner(verbosity=2).run(suite)

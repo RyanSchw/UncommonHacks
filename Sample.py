@@ -1,4 +1,5 @@
 import random
+import Vec2d
 
 ## SAMPLE CLASS
 # Contains data for an timestamped position, velocity, and acceleration.

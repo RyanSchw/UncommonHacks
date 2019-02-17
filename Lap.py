@@ -124,4 +124,4 @@ Checkpoints: {checkpoints}
     def compile_lap_times(self):
         for checkpoint in self.checkpoints:
             # Calculate the time of the "Checkpoint Samples"
-            checkpoint.time = checkpoint.samples[-1] - checkpoint.samples[0]
+            checkpoint.time = checkpoint.samples[-1].time - checkpoint.samples[0].time
