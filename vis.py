@@ -1,4 +1,5 @@
-import utils
+import Vec2d
+import Sample
 import random
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -11,12 +12,13 @@ class SampleVisualizer:
         if rand_sample_len is not None:
             self.samples = self.gen_rand_samples(rand_sample_len)
 
-    def plot_track(self):
+    def plot_track(self, max_vel=1):
         x = [v.pos.x for v in self.samples]
         y = [v.pos.y for v in self.samples]
-        col = cm.rainbow([v.vel.mag() for v in self.samples])
+        col = cm.rainbow([v.vel.mag() / max_vel for v in self.samples])
         
         plt.scatter(x, y, c=col, s=50)
+        plt.show()
 
     def gen_rand_samples(self, rand_sample_len):
         samp = []
