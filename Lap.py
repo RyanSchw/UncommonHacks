@@ -43,12 +43,6 @@ Time: {time}
     def deserialize(obj):
         return Vec2d(obj['x1'], obj['y1']), Vec2d(obj['x2'], obj['y2'])
 
-    # The code will be written to create the actual objects
-    # itr = Checkpoint.deserialize_array(JSON)
-    # for i, indv in enumerate(itr):
-    #     node1, node2 = Checkpoint.deserialize(indv)
-    #     checkpoint = Checkpoint(i, node1, node2)
-
     def contains(self, sample):
         return sample in self.samples
 
@@ -132,6 +126,11 @@ Checkpoints: {checkpoints}
                 self.checkpoints[i].samples.append(nextsample)
         
         self.compile_lap_times()
+
+    def summary(self):
+        return '''Cool cat facts about your current run
+
+'''
 
     def compile_lap_times(self):
         for checkpoint in self.checkpoints:
