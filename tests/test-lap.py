@@ -75,6 +75,27 @@ class TestCheckpoint(unittest.TestCase):
 
         self.assertTrue(checkpoint.crossedCheckpoint(sample1, sample2))
 
+    def test_deserialize(self):
+        json = '''{
+            "checkpoints": [
+                {
+                "x1": 123,
+                "y1": 456,
+                "x2": 678,
+                "y2": 789
+                },
+                {
+                "x1": 123,
+                "y1": 456,
+                "x2": 678,
+                "y2": 789
+                }
+            ]
+        }'''
+
+        res = Checkpoint.deserialize_array(json)
+        print(res)
+
 class TestRun(unittest.TestCase):
     def test_funtionality(self):
         path = [

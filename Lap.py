@@ -1,6 +1,8 @@
 import csv
 import sys
 import os
+import json
+from Vec2d import Vec2d
 
 
 class Checkpoint:
@@ -34,8 +36,18 @@ Time: {time}
         assert self.samples, 'Samples array is empty'
         return self.samples[-1].vel
 
-    def parse_from_server(self, json):
-        pass
+    def deserialize_array(JSON):
+        obj = json.loads(JSON)
+        return obj['checkpoints']
+
+    def deserialize(obj):
+        return Vec2d(obj['x1'], obj['y1']), Vec2d(obj['x2'], obj['y2'])
+
+    # The code will be written to create the actual objects
+    # itr = Checkpoint.deserialize_array(JSON)
+    # for i, indv in enumerate(itr):
+    #     node1, node2 = Checkpoint.deserialize(indv)
+    #     checkpoint = Checkpoint(i, node1, node2)
 
     def contains(self, sample):
         return sample in self.samples
