@@ -8,18 +8,16 @@ class Button {
         this.func = func;
 
         this.pressed = false;
-
-        this.button_col = color(40, 40, 40);
     }
 
     draw(){
         push();
 
-        if (this.pressed){fill(this.button_col);} 
+        if (this.pressed){fill(BUTTON_COL);} 
         else {fill(BACKGROUND_COL);}
 
         strokeWeight(10);
-        stroke(this.button_col);
+        stroke(BUTTON_COL);
         //fill(BACKGROUND_COL);
         rectMode(CORNER);
         rect(this.x, this.y, this.w, this.h);
@@ -27,11 +25,11 @@ class Button {
         //console.log([this.x, this.y, this.x+this.w, this.y+this.h]);
 
         if (this.pressed){fill('white');} 
-        else {fill('black');}
+        else {fill(BUTTON_COL);}
 
         textAlign(CENTER, CENTER);
         noStroke();
-        textSize(BUTTON_HEIGHT * 0.6);
+        textSize(BUTTON_HEIGHT * 0.4);
         text(this.text, this.x+this.w/2, this.y+this.h/2);
         pop();
     }

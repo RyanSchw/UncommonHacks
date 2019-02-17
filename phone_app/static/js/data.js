@@ -34,6 +34,13 @@ function draw_data(samples, rad){
         circ_y = (DISPLAY_SIZE - 2*PADDING_PIX) * samples[i].pos.y + PADDING_PIX
         circle(circ_x, circ_y, rad);
     }
+    textSize(50);
+    colorMode(RGB);
+    fill(BUTTON_COL)
+    if(cur_run != 0)
+        text("Checkpoint: " + cur_run, 10, 50);
+    else
+    text("Checkpoint: Full Track", 10, 50);
     pop();
 }
 
@@ -65,12 +72,12 @@ class Stats{
 
     draw(){
         var text_height = BUTTON_HEIGHT * 0.3;
-        fill('black');
+        fill(BUTTON_COL);
         textAlign(LEFT);
         noStroke();
         textSize(text_height);
         text("Statistics:", this.x, this.y);
-        
+
         if(samples[samples.length-1])
             text("Lap time: " + samples[samples.length-1].time, this.x, this.y + text_height);
     }

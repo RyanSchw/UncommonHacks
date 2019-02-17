@@ -5,6 +5,8 @@ var record_button;
 var checkpoints = [];
 var socket;
 var samples = [];
+var runs = [];
+var cur_run = 0;
 var stats;
 
 // Constants
@@ -15,12 +17,14 @@ var PADDING_PIX;
 var DOT_RAD = 7;
 var LINE_POS_X;
 var BUTTON_HEIGHT;
+var BUTTON_COL;
 
 function setup() {
 	// put setup code here
 	createCanvas(windowWidth, windowHeight);
 
 	socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
+	BUTTON_COL = color(40, 40, 40);
 
 	var received_data;
 	socket.on('data_vis', function (msg) {
@@ -64,6 +68,13 @@ function keyPressed(){
 	if(keyCode == ESCAPE && !checkpoints[checkpoints.length - 1].placed){
 		checkpoints.pop();
 	}
+
+	if(keyCode == UP_ARROW){
+		cur_run = (cur_run + 1) % (runs.length + 1);
+	}
+	if(keyCode == DOWN_ARROW){
+		cur_run = (cur_run - 1) % (runs.length + 1);
+	}
 }
 
 function draw_setup(){
@@ -103,6 +114,7 @@ function setup_dash(){
 function draw_dash(){
 	push();
 	strokeWeight(5);
+	fill(BUTTON_COL);
 	line(LINE_POS_X, 0, LINE_POS_X, DISPLAY_SIZE);
 	cp_toggle_button.draw();
 	record_button.draw();
