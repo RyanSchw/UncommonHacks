@@ -17,6 +17,7 @@ class SampleVisualizer:
         y = [getattr(v, meas).y for v in self.samples]
         
         plt.plot(x, y, 'ro')
+        plt.show()
 
     def gen_rand_samples(self, rand_sample_len):
         samp = []

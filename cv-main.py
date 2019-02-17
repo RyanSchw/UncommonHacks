@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 import time
+from utils import Vec2d, Sample
+from vis import SampleVisualizer
 
 DEBUG = False
 
@@ -28,10 +30,12 @@ def find_ball_location(mask):
     cX = int(M["m10"] / M["m00"])
     cY = int(M["m01"] / M["m00"])
 
-    return [cX, cY]
+    return Vec2d(cX, cY)
 
 
 path = []
+last_frame_timestamp = -1
+last_position = Vec2d(-1, -1)
 while(video.isOpened()):
 
     # Measure frame reading speeds
@@ -48,8 +52,24 @@ while(video.isOpened()):
         mask = cv2.inRange(hsv, lower_red, upper_red)       # Mask out non-red pixels
         location = find_ball_location(mask)                 # Find location of pixels
 
+        sample = Sample(location, Vec2d(0,0), Vec2d(0,0), Vec2d(0,0))
+        sample.pos = location
         # Form path of locations
-        path.append(location)
+        path.append(sample)
+
+        # Calculate frame velocity
+        frame_timestamp = video.get(cv2.CAP_PROP_POS_MSEC)
+        if last_frame_timestamp > 0:
+            
+            delta_time = (frame_timestamp - last_frame_timestamp) / 1000
+            delta_pos = location.dist(last_position)
+
+            print(delta_pos)
+
+        last_position = location
+        last_frame_timestamp = frame_timestamp
+
+
 
         # Debug print statements
         if DEBUG:
@@ -59,10 +79,13 @@ while(video.isOpened()):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     else:
-        print("Processing complete!")
-        print(path)
+        print("Processing complete " + str(len(path)))
+        # print(path)
         break
 
 # When everything done, release the capture
 video.release()
 cv2.destroyAllWindows()
+
+vizer = SampleVisualizer(path)
+vizer.plot_meas("pos")

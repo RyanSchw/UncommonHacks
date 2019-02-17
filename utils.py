@@ -1,4 +1,5 @@
 import random
+import math
 
 class Vec2d:
     def __init__(self, x, y):
@@ -11,6 +12,11 @@ class Vec2d:
     @classmethod
     def rand(self):
         return Vec2d(random.random(), random.random())
+
+    @classmethod
+    def dist(self, other):
+        self.x
+        return math.sqrt(pow(self.x - other.x, 2) + pow(self.y - other.y))
 
 SAMPLE_ATTRIBUTES = ('pos', 'vel', 'acc', 'time')
 
