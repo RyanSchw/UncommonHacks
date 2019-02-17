@@ -118,3 +118,10 @@ Checkpoints: {checkpoints}
                     break
             if i >= 0:
                 self.checkpoints[i].samples.append(nextsample)
+        
+        self.compile_lap_times()
+
+    def compile_lap_times(self):
+        for checkpoint in self.checkpoints:
+            # Calculate the time of the "Checkpoint Samples"
+            checkpoint.time = checkpoint.samples[-1] - checkpoint.samples[0]
