@@ -1,5 +1,8 @@
 import unittest
-import Vec2d
+import sys
+sys.path.append("..")
+
+from Vec2d import Vec2d
 
 class TestVec2d(unittest.TestCase):
 
@@ -58,6 +61,18 @@ class TestVec2d(unittest.TestCase):
         b = Vec2d(3/5, 4/5)
 
         self.assertTrue(a == b)
+
+    def test_elm_multiply(self):
+        a = Vec2d(3, 4)
+        b = Vec2d(3 * 3, 4 * 4)
+
+        self.assertTrue(a.elm_mult(a) == b)
+
+    def test_elm_divide(self):
+        a = Vec2d(3, 4)
+        b = Vec2d(3 / 3, 4 / 4)
+
+        self.assertTrue(a.elm_div(a) == b)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestVec2d)
 unittest.TextTestRunner(verbosity=2).run(suite)

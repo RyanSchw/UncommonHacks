@@ -28,6 +28,13 @@ class Vec2d:
             return Vec2d(0,0)
         return Vec2d(self.x / mag,  self.y/ mag)
 
+    # Element by element multiplication
+    def elm_mult(self, other):
+        return Vec2d(self.x * other.x, self.y * other.y)
+    # Element by element division
+    def elm_div(self, other):
+        return Vec2d(self.x / other.x, self.y / other.y)
+
     def __add__(self, other):
         return Vec2d(self.x + other.x, self.y + other.y)
     def __sub__(self, other):
