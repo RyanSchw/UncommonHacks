@@ -1,4 +1,5 @@
 import random
+import math
 
 class Vec2d:
     def __init__(self, x, y):
@@ -8,9 +9,30 @@ class Vec2d:
     def __repr__(self):
         return '({0}, {1})'.format(self.x, self.y)
 
+    def mag(self):
+        return math.sqrt(self.x**2 + self.y**2)
+
     @classmethod
     def rand(self):
         return Vec2d(random.random(), random.random())
+
+    def dist(self, other):
+        return (self - other).mag()
+
+    def mag(self):
+        return math.sqrt(pow(self.x, 2) + pow(self.y, 2))
+
+    def unit(self):
+        mag = self.mag()
+        return Vec2d(self.x / mag,  self.y/ mag)
+
+    def __add__(self, other):
+        return Vec2d(self.x + other.x, self.y + other.y)
+    def __sub__(self, other):
+        return Vec2d(self.x - other.x, self.y - other.y)
+
+
+
 
 SAMPLE_ATTRIBUTES = ('pos', 'vel', 'acc', 'time')
 
