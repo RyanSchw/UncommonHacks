@@ -5,6 +5,7 @@ var record_button;
 var toggle_button;
 var checkpoints = [];
 var socket;
+var samples = [];
 
 // Constants
 var DISPLAY_SIZE;
@@ -21,12 +22,10 @@ function setup() {
 
 	socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
 
+	var received_data;
 	socket.on('data_vis', function (msg) {
-		console.log(msg.data);     
-		console.log("HELLOOO\n\n\n\n\n")   
+		samples = parse_samples(msg.data);
 	});
-	
-	samples = get_samples();
 
 	draw_setup();
 }

@@ -11,7 +11,8 @@ import os
 app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 socketio = SocketIO(app)
-p = VideoProcess(video_path="../phone_app/uploads/video.webm", debug=False)
+#p = VideoProcess(video_path="../phone_app/uploads/video.webm", debug=False)
+p = VideoProcess(video_path="../resources/car_test_2_motion.webm", debug=False)
 
 
 @app.route('/', methods=['GET'])

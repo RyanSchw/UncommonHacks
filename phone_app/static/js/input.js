@@ -53,7 +53,25 @@ var cp_button_onclick = function(){
     } else {
         // Button turned off
         cp_toggle_button.pressed = false;
+
+        cps = checkpoints_to_json();
+        send_checkpoints(cps);
     }
+}
+
+function checkpoints_to_json(){
+    conv = {"checkpoints": []};
+    checkpoints.forEach(function(cp){
+		conv.checkpoints.push(cp.to_json());
+    });
+    
+    return json;
+}
+
+function send_checkpoints(json){
+    socket.emit('get_checkpoints', {
+        data: json.stringify()
+    });
 }
 
 var record_button_onclick = function(){
@@ -98,6 +116,10 @@ class CheckPoint {
         this.y2 = 0;
 
         this.placed = false;
+    }
+
+    to_json(){
+        return {"x1": this.x1, "y1": this.y1, "x2": this.x2, "y2": this.y2};
     }
 
     draw(){
