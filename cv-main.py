@@ -13,10 +13,10 @@ class VideoProcess():
     def __init__(self, video_path="./resources/red_dot_1_down.avi", debug=False):
         self.debug = debug
         self.video_path = video_path
-        self.scale_factor = 0.25
+        self.scale_factor = 1
 
         self.low_mask = np.array([0,140,40]) # Mask for color detection
-        self.up_mask = np.array([255,255,240])
+        self.up_mask = np.array([255,255,250])
         self.path = []  # Final output path for model
 
         # Keep track of maximum velocity when processing
@@ -44,8 +44,8 @@ class VideoProcess():
         mask = cv2.inRange(hsv, self.low_mask, self.up_mask)       # Mask out non-red pixels
 
         if self.debug:
-            cv2.imshow('frame', mask)
-            cv2.waitKey(1)
+            cv2.imshow('frame', frame)
+            cv2.waitKey(2)
 
         return self.find_ball_location(mask)                 # Find location of pixels
 
@@ -76,7 +76,7 @@ class VideoProcess():
         last_time = -1
         last_pos = Vec2d(-1, -1)
 
-        max_frames = 180
+        max_frames = 500
         frame_index = 0
         while(video.isOpened() and frame_index < max_frames):
             frame_index += 1
@@ -89,21 +89,19 @@ class VideoProcess():
 
                 cur_pos = self.process_frame(frame)
 
-                if cur_pos == -1:
-                    break
+                if cur_pos != -1:
+                    # Scale down vector to a 0.0 -> 1.0 scale
+                    cur_pos = cur_pos.elm_div(scale_vector)
+                    
+                    # Calculate frame velocity
+                    cur_time = video.get(cv2.CAP_PROP_POS_MSEC) / 1000.0
+                    cur_vel = self.calculate_velocity(cur_time, last_time, cur_pos, last_pos)
 
-                # Scale down vector to a 0.0 -> 1.0 scale
-                cur_pos = cur_pos.elm_div(scale_vector)
-                
-                # Calculate frame velocity
-                cur_time = video.get(cv2.CAP_PROP_POS_MSEC) / 1000.0
-                cur_vel = self.calculate_velocity(cur_time, last_time, cur_pos, last_pos)
+                    sample = Sample(cur_pos, cur_vel, Vec2d(0,0), cur_time)
+                    self.path.append(sample)
 
-                sample = Sample(cur_pos, cur_vel, Vec2d(0,0), cur_time)
-                self.path.append(sample)
-
-                last_time = cur_time
-                last_pos = cur_pos
+                    last_time = cur_time
+                    last_pos = cur_pos
                 
             else:
                 print("Processing complete " + str(len(self.path)))
@@ -116,7 +114,7 @@ class VideoProcess():
             cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    p = VideoProcess(video_path="./resources/car_test_1.mp4",debug=True)
+    p = VideoProcess(video_path="./phone_app/uploads/video.webm",debug=True)
     p.process_video()
 
     save_path = "./resources/test_dot_1.pickle"
@@ -128,6 +126,6 @@ if __name__ == "__main__":
     # Example load pickled data
     with open(save_path , "rb" ) as save_file:
         data = pickle.load(save_file)
-        print(data[1])
+
 
     p.view_path()

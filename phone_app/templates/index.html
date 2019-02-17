@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta content="stuff, to, help, search, engines, not" name="keywords">
+	<meta content="What this page is about." name="description">
+	<meta content="Display Webcam Stream" name="title">
+	<title>Display Webcam Stream</title>
+
+	<style>
+		button {
+			width: 300px;
+			height: 200px;
+			border: 10px #333 solid;
+			font-size: 30px;
+		}
+
+		.active {
+			background-color: red;
+		}
+
+		.inactive {
+			background-color: grey;
+		}
+
+		.selPhone {
+			background-color: aqua;
+		}
+
+		.invis {
+			display: none;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+
+</head>
+
+<body>
+
+	<button id="toggle">Toggle Mode</button>
+	<br><br>
+	<button id="record" class="inactive">Record</button>
+	<br><br>
+	<button id="isRecord" class="invis">Active?</button>
+
+
+
+
+	<script>
+		var record = document.getElementById("record");
+		var isRecord = document.getElementById("isRecord");
+		var toggle = document.getElementById("toggle");
+
+		var socket = io.connect('https://' + document.domain + ':' + location.port + '/sock');
+
+		socket.on('hello', function (msg) {
+
+		});
+
+		record.onclick = function () {
+			if (record.className == "inactive") {
+				socket.emit('req-rec', {
+					record: true
+				})
+				this.className = "active"
+			} else {
+				socket.emit('req-rec', {
+					record: false
+				})
+				this.className = "inactive"
+			}
+		}
+
+		toggle.onclick = function () {
+			console.log("toggled!")
+			isRecord.classList.toggle("invis")
+			record.classList.toggle("invis")
+			toggle.classList.toggle("invis")
+			if (navigator.mediaDevices.getUserMedia) {
+				navigator.mediaDevices.getUserMedia({
+						video: {
+							facingMode: {
+								exact: 'environment'
+							}
+						}
+					})
+					.then(function (stream) {
+						// video.srcObject = stream;
+						var recordedChunks = [];
+
+						var options = {
+							mimeType: 'video/webm;codecs=vp9'
+						};
+						mediaRecorder = new MediaRecorder(stream, options);
+						mediaRecorder.ondataavailable = handleDataAvailable;
+
+						// Replace websocket
+						console.log("Hello!")
+						socket.on('record', function (msg) {
+							isRecord.classList.toggle("active")
+							if (msg.data.record) {
+								mediaRecorder.start();
+								console.log("1")
+							} else {
+								mediaRecorder.stop();
+								console.log("2")
+							}
+						});
+						// 
+						// 
+
+						function handleDataAvailable(event) {
+							if (event.data.size > 0) {
+								recordedChunks.push(event.data);
+								var blob = new Blob(recordedChunks, {
+									type: 'video/webm'
+								});
+
+								recordedChunks = []
+
+								var form = new FormData();
+								form.append('file', blob, "video.webm");
+								form.append('title', "video");
+								$.ajax({
+									type: 'POST',
+									url: '/save-file',
+									data: form,
+									cache: false,
+									processData: false,
+									contentType: false
+								}).done(function (data) {
+									console.log(data);
+								});
+
+							} else {}
+						}
+					})
+					.catch(function (e) {
+						alert("Something went wrong! " + e);
+					});
+			}
+		}
+
+		var chunks = [];
+	</script>
+</body>
+
+</html>
